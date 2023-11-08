@@ -76,20 +76,25 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+        app.get('/submitedAssignment/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await submitedAssinment.findOne(query);
+            res.send(result);
+        })
         app.put('/submitedAssignment/:id', async (req, res) => {
             const id = req.params.id;
+            // console.log(id);
             const filter = { _id: new ObjectId(id) };
             const updateAssignmentMark = req.body;
             const updateDoc = {
                 $set: {
-                    title: updateAssignmentMark.title,
-                    difficulty: updateAssignmentMark.difficulty,
-                    description: updateAssignmentMark.description,
-                    url: updateAssignmentMark.url,
                     marks: updateAssignmentMark.marks,
+                    feedback: updateAssignmentMark.feedback
                 }
             };
-            const result = await collection.updateOne(filter, updateDoc);
+            // console.log(updateDoc);
+            const result = await submitedAssinment.updateOne(filter, updateDoc);
             res.send(result);
         });
 
