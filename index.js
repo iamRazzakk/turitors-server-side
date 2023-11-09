@@ -82,9 +82,9 @@ async function run() {
             const result = await submitedAssinment.findOne(query);
             res.send(result);
         })
+        // for update
         app.put('/submitedAssignment/:id', async (req, res) => {
             const id = req.params.id;
-            // console.log(id);
             const filter = { _id: new ObjectId(id) };
             const updateAssignmentMark = req.body;
             const updateDoc = {
