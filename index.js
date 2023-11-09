@@ -64,12 +64,13 @@ async function run() {
             const result = await collection.insertOne(newAssinment);
             res.send(result)
         });
-        // post for modal data
+        // post for modal data 
         app.post('/submitedAssignment', async (req, res) => {
             const newSubmitedAssingnment = req.body
             const result = await submitedAssinment.insertOne(newSubmitedAssingnment)
             res.send(result)
         })
+        // get for modal data
         app.get('/submitedAssignment', async (req, res) => {
             const cursor = submitedAssinment.find();
             const result = await cursor.toArray();
