@@ -32,6 +32,31 @@ async function run() {
             const result = await collection.find(query).toArray()
             res.send(result)
         })
+        app.get('/createAssainment/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: new ObjectId(id) }
+            const result = await collection.deleteOne(filter)
+            res.send(result)
+        })
+        app.get('/createAssainment/:id', async (req, res) => {
+            const id = req.params.id
+            console.log(id)
+            const filter = { _id: new ObjectId(id) }
+            const result = await collection.findOne(filter)
+            res.send(result)
+        })
+        app.get('/createAssainment/:title', async (req, res) => {
+            const data = req.params.title
+            const query = { title: data }
+            const result = await collection.find(query).toArray()
+            res.send(result)
+        })
+        // app.get('/createAssainment/:id', async (req, res) => {
+        //     const id = req.params.id
+        //     const query = { _id: new ObjectId(id) };
+        //     const result = await collection.findOne(query);
+        //     res.send(result);
+        // })
         app.get('/createAssainment', async (req, res) => {
             const cursor = collection.find();
             const result = await cursor.toArray();
