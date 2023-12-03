@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const jwt = require('jsonwebtoken');
 require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 5000;
@@ -9,8 +11,8 @@ const port = process.env.PORT || 5000;
 app.use(cors())
 app.use(express.json())
 
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = "mongodb+srv://turitors:VDj6Lte7asKNcKii@cluster0.pii6nyx.mongodb.net/?retryWrites=true&w=majority";
+
+const uri = `mongodb+srv://turitors:VDj6Lte7asKNcKii@cluster0.pii6nyx.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -27,18 +29,12 @@ async function run() {
         const collection = client.db("Turitors").collection("assinment")
         const submitedAssinment = client.db("Turitors").collection("submitedAssinment")
         const submittedMarkFeedback = client.db("Turitors").collection("markFeedback")
-        // app.get('/createAssainment/:title', async (req, res) => {
-        //     const data = req.params.title
-        //     const query = { title: data }
-        //     const result = await collection.find(query).toArray()
-        //     res.send(result)
-        // })
-        // app.get('/createAssainment/:id', async (req, res) => {
-        //     const id = req.params.id
-        //     const filter = { _id: new ObjectId(id) }
-        //     const result = await collection.deleteOne(filter)
-        //     res.send(result)
-        // })
+        app.post('/jwt', async (req, res) => {
+            const user = req.body;
+            const token = jwt.sign(user,process.env.ACCESS_TOKEN,{expiresIn:'20h'});
+            res.send({token})
+        })
+
         app.get('/updateAssignment/:id', async (req, res) => {
             const id = req.params.id
             console.log(id)
@@ -62,12 +58,7 @@ async function run() {
             const result = await collection.updateOne(filter, updateDoc);
             res.send(result);
         })
-        // app.get('/createAssainment/:title', async (req, res) => {
-        //     const data = req.params.title
-        //     const query = { title: data }
-        //     const result = await collection.find(query).toArray()
-        //     res.send(result)
-        // })
+
         app.get('/createAssainment/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: new ObjectId(id) };
@@ -106,6 +97,7 @@ async function run() {
             const result = await collection.insertOne(newAssinment);
             res.send(result)
         });
+
         // post for modal data 
         app.post('/submitedAssignment', async (req, res) => {
             const newSubmitedAssingnment = req.body
@@ -140,10 +132,10 @@ async function run() {
             res.send(result);
         });
         app.post('/markFeedback', async (req, res) => {
-            const submitMarkFeedback = req.body;
-            const result = await submittedMarkFeedback.insertOne(submitMarkFeedback);
+            const MarkFeedback = req.body;
+            const result = await submittedMarkFeedback.insertOne(MarkFeedback);
             res.send(result)
-        });
+        })
         app.get('/markFeedback', async (req, res) => {
             const cursor = submittedMarkFeedback.find();
             const result = await cursor.toArray();
